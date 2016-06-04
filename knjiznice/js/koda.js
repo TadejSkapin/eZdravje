@@ -152,4 +152,98 @@ function kreirajEHRzaBolnika() {
 		});
 	}
 }
-// TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
+
+function dodajSimptom() {
+	sessionId = getSessionId();
+
+	var ehrId = $("#dodajSimptomEHR").val();
+	var datumInUra = $("#dodajSimptomDatumInUra").val();
+    var simptom = $("dodajSimptom").val();
+
+	if (!ehrId || ehrId.trim().length == 0) {
+		$("#dodajSimptomSporocilo").html("<span class='obvestilo " +
+      "label label-warning fade-in'>Prosim vnesite zahtevane podatke!</span>");
+	} else {
+		$.ajaxSetup({
+		    headers: {"Ehr-Session": sessionId}
+		});
+		var podatki = {
+		    "ctx/language": "en",
+            "ctx/time": datumInUra, 
+			"Symptom": { simpotom }          
+		};
+		var parametriZahteve = {
+		    ehrId: ehrId,
+		    format: 'RAW'
+		};
+		$.ajax({
+		    url: baseUrl + "/composition?" + $.param(parametriZahteve),
+		    type: 'POST',
+		    contentType: 'application/json',
+		    data: JSON.stringify(podatki),
+		    success: function (res) {
+		        $("#dodajSimptomSporocilo").html(
+              "<span class='obvestilo label label-success fade-in'>" +
+              res.meta.href + ".</span>");
+		    },
+		    error: function(err) {
+		    	$("#dodajSimptomSporocilo").html(
+            "<span class='obvestilo label label-danger fade-in'>Napaka '" +
+            JSON.parse(err.responseText).userMessage + "'!");
+		    }
+		});
+	}
+}
+
+function preberiSimptome() {
+    sessionId = getSessionId();
+
+	var ehrId = $("#preberiSimptomeEHRid").val();
+//	var tip = $("#preberiTipZaVitalneZnake").val();
+
+	if (!ehrId || ehrId.trim().length == 0) {
+		$("#preberiSimptomeSporocilo").html("<span class='obvestilo " +
+      "label label-warning fade-in'>Prosim vnesite zahtevan podatek!");
+	} else {
+		$.ajax({
+			url: baseUrl + "/demographics/ehr/" + ehrId + "/party",
+	    	type: 'GET',
+	    	headers: {"Ehr-Session": sessionId},
+	    	success: function (data) {
+				var party = data.party;
+				$("#preberiSimptomeSporocilo").html("<br/><span>Pridobivanje " +
+                    "simpotomov za bolnika <b>'" + party.firstNames +" " + party.lastNames + "'</b>.</span><br/><br/>");
+    			$.ajax({
+      			    url: baseUrl + "/view/" + ehrId + "/" + "body_temperature",
+    			    type: 'GET',
+    			    headers: {"Ehr-Session": sessionId},
+    			    success: function (res) {
+    			        	if (res.length > 0) {
+    	    			    	var results = "<table class='table table-striped " +
+                             "<th class='text-left'>Telesna temperatura</th></tr>";
+    				        for (var i in res) 
+    				        {
+    				            results += "<tr><td class='text-right'>" + res[i].symptom + "</td>";
+    				        }
+    				        results += "</table>";
+    				        $("#simpotomiDoZdaj").append(results);
+    			    	} else {
+    			    		$("#preberiSimptomeSporocilo").html(
+                             "<span class='obvestilo label label-warning fade-in'>" +
+                                "Ni podatkov!</span>");
+    			    	}
+    			    },
+    			    error: function() {
+    			    	$("#preberiSimptomeSporocilo").html("<span class='obvestilo label label-danger fade-in'>Napaka '" +
+                        JSON.parse(err.responseText).userMessage + "'!");
+    			    }
+    			});
+	    	},
+	    	error: function(err) {
+	    		$("#preberiSimptomeSporocilo").html(
+            "<span class='obvestilo label label-danger fade-in'>Napaka '" +
+            JSON.parse(err.responseText).userMessage + "'!");
+	    	}
+		});
+	}
+}

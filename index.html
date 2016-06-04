@@ -91,7 +91,7 @@
   					<span class="label label-default">EHR ID</span><input id="dodajSimptomEHR" type="text" class="form-control input-mini" placeholder="8abccbe5-4ff9-4389-8c1d-09950a06e2f7">
   					<span class="label label-default">Datum in ura</span><input id="dodajSimptomDatumInUra" type="text" class="form-control input-mini" placeholder="2014-11-21T11:40Z">
   					<span class="label label-default">Simptom</span><div class="input-group"><input id="dodajSimptomSimptom" type="text" class="form-control input-mini" placeholder="Glavobol"></div>
-  					<button type="button" class="btn btn-primary btn-xs" onclick="dodajSimptom()">Dodaj simptome</button><span id="dodajSimptom"></span>
+  					<button type="button" class="btn btn-primary btn-xs" onclick="dodajSimptom()">Dodaj simptome</button><span id="dodajSimptomSporocilo"></span>
   			  </div>
   			</div>
   		</div>
@@ -101,15 +101,15 @@
 		      <div class="panel-heading">
 		  	    <div class="row">
         			<div class="col-lg-6 col-md-6 col-sm-6"><b>Pregled simpotomov</b> bolnika</div>
-        			<div class="col-lg-3 col-md-3 col-sm-3"><select class="form-control input-sm" id="preberiEhrIdZaVitalneZnake"><option value=""></option>
+        			<div class="col-lg-3 col-md-3 col-sm-3"><select class="form-control input-sm" id="preberiSimptome"><option value=""></option>
         			  <option value="8abccbe5-4ff9-4389-8c1d-09950a06e2f7">Han Yolo</option>
         			  <option value="f2a9691a-c503-4253-aab2-a0a916005f15">Ragnar Lothbrok</option>
         			  <option value="dedd1ee6-8605-4ac5-a462-24fbc15ad199">Someone Else</option></select></div>
       		  </div>
     	    </div>
     	    <div class="panel-body">
-    	  	  <span class="label label-default">EHR ID</span><input id="pridobiSimptomeEHRid" type="text" class="form-control input-mini" placeholder="8abccbe5-4ff9-4389-8c1d-09950a06e2f7">
-    	  		 <button type="button" class="btn btn-primary btn-xs" onclick="preberiMeritveVitalnihZnakov()">Preberi simptome</button><span id="preberiSimptome"></span>
+    	  	  <span class="label label-default">EHR ID</span><input id="preberiSimptomeEHRid" type="text" class="form-control input-mini" placeholder="8abccbe5-4ff9-4389-8c1d-09950a06e2f7">
+    	  		 <button type="button" class="btn btn-primary btn-xs" onclick="preberiSimptome()">Preberi simptome</button><span id="preberiSimptomeSporocilo"></span>
     			  <div id="simpotomiDoZdaj"></div>
     	   </div>
     	 </div>
