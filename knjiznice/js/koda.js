@@ -333,7 +333,7 @@ function preberiSimptome() {
 function odpriLekarno(tableCell) {
 	console.log("Delujem!");
 	var cilj = 'http://www.lekarnar.com/oddelki/zdravila-brez-recepta?simptom_facet=' + this;
-	var povezava='<iframe src="' +cilj +'"></iframe>';
+	var povezava='<iframe src="' +cilj +'" width="90%" height="50%"></iframe>';
 	$("#lekarnarPovezava").append(povezava);
 }
 
