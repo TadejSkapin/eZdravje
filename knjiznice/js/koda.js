@@ -31,13 +31,13 @@ function getSessionId() {
  * @return ehrId generiranega pacienta
  */
 function zacniGeneriranje() {
-    generirajPodatke(1);
-    generirajPodatke(2);
-    generirajPodatke(3);
+    var ID =generirajPodatke(1);
+    ID = generirajPodatke(2);
+    ID = generirajPodatke(3);
 }
+
 function generirajPodatke(stPacienta) {
-  var ehrId = "";
-    
+	var vrni = '';
   switch (stPacienta) {
     case 1:
         var ime = "Han";
@@ -58,7 +58,7 @@ function generirajPodatke(stPacienta) {
         break;
   }
 
-        sessionId = getSessionId();
+           sessionId = getSessionId();
         $.ajaxSetup({
 		    headers: {"Ehr-Session": sessionId}
 		});
@@ -93,9 +93,8 @@ function generirajPodatke(stPacienta) {
                 }
             });
         }
-    });    
-
-  return ehrId;
+    }); 
+  return vrni;
 }
 
 function kreirajEHRzaBolnika() {
@@ -207,7 +206,7 @@ function preberiSimptome() {
 		$.ajax({
 			url: baseUrl + "/demographics/ehr/" + ehrId + "/party",
 	    	type: 'GET',
-	    	headers: {"Ehr-Session": sessionId},
+	    	headers: {"Ehr-Session": sessionId},	
 	    	success: function (data) {
 				var party = data.party;
 				$("#preberiSimptomeSporocilo").html("<br/><span>Pridobivanje " +
@@ -298,7 +297,6 @@ function preberiSimptome() {
     				        
     				        $('.text-left').click(function(){
     				        	var parameter = $(this).text().toLowerCase();
-								console.log(parameter);
 								odpriLekarno(parameter);
 							});
     			    	} else {
@@ -324,7 +322,7 @@ function preberiSimptome() {
 
 function odpriLekarno(tableCell) {
 	var cilj = 'http://www.lekarnar.com/oddelki/zdravila-brez-recepta?simptom_facet=' +tableCell + '&sort=score';
-	var povezava='<iframe src="' +cilj +'" width="90%" height="100%"></iframe>';
+	var povezava='<iframe src="' +cilj +'" width="100%" height="100%"></iframe>';
 	$("#lekarnarPovezava").append(povezava);
 }
 
