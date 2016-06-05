@@ -297,18 +297,10 @@ function preberiSimptome() {
     				        $("#simpotomiDoZdaj").append(results);
     				        
     				        $('.text-left').click(function(){
-								console.log(this);
-								odpriLekarno(this);
+    				        	var parameter = $(this).text().toLowerCase();
+								console.log(parameter);
+								odpriLekarno(parameter);
 							});
-    				        var tabela = document.getElementById("tabeleSimptomov");
-    				        console.log(tabela);
-							   if (tabela != null) {
-							        for (var i = 0; i < tabela.rows.length; i++) {
-							            tabela.rows[i].cells[0].onclick = function () {
-							                odpriLekarno(this);
-							            };
-							        }
-							   }
     			    	} else {
     			    		$("#preberiSimptomeSporocilo").html(
                              "<span class='obvestilo label label-warning fade-in'>" +
@@ -331,21 +323,8 @@ function preberiSimptome() {
 }
 
 function odpriLekarno(tableCell) {
-	console.log("Delujem!");
-	var cilj = 'http://www.lekarnar.com/oddelki/zdravila-brez-recepta?simptom_facet=' + this;
-	var povezava='<iframe src="' +cilj +'" width="90%" height="50%"></iframe>';
+	var cilj = 'http://www.lekarnar.com/oddelki/zdravila-brez-recepta?simptom_facet=' +tableCell + '&sort=score';
+	var povezava='<iframe src="' +cilj +'" width="90%" height="100%"></iframe>';
 	$("#lekarnarPovezava").append(povezava);
 }
 
-//table row -> ima table, ki z on click prikaže dodatne simptome in zgenerira iframe
-/* 	<tr><td id="simpt"+ i onclick=ustvariPodtabelo()></td>
-*	
-*	
-*	
-
-//cilj= 'http://www.lekarnar.com/oddelki/zdravila-brez-recepta?simptom_facet=' +simptom;
-//povezava='<iframe src="' +cilj +'"></iframe>';
-//$("#lekarnarPovezava).append(povezava);
-
-*master/detail v obliki tabele, kjer lahko s klikom na vrstico odpremo podtabelo in zgeneriramo predlagana zdravila
-*/
