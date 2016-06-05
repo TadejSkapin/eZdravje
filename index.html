@@ -41,6 +41,7 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center">
+  	    <div class="panel-body" id="lekarnarPovezava"></div>
       </div>
     </div>
         
@@ -90,8 +91,15 @@
   			  <div class="panel-body">
   					<span class="label label-default">EHR ID</span><input id="dodajSimptomEHR" type="text" class="form-control input-mini" placeholder="8abccbe5-4ff9-4389-8c1d-09950a06e2f7">
   					<span class="label label-default">Datum in ura</span><input id="dodajSimptomDatumInUra" type="text" class="form-control input-mini" placeholder="2014-11-21T11:40Z">
-  					<span class="label label-default">Simptom</span><div class="input-group"><input id="dodajSimptomSimptom" type="text" class="form-control input-mini" placeholder="Glavobol"></div>
-  					<button type="button" class="btn btn-primary btn-xs" onclick="dodajSimptom()">Dodaj simptome</button><span id="dodajSimptomSporocilo"></span>
+<!--  					<span class="label label-default">Simptom</span><div class="input-group"><input id="dodajSimptomSimptom" type="text" class="form-control input-mini" placeholder="Glavobol"></div> -->
+            <span class="label label-default">Simptom</span><select class="form-control input-sm" id="dodajSimptomSimptom"><option value=""></option>
+  						  <option value=100>Vnetje</option> <option value=110>Prehlad</option> <option value=120>Bolečina</option> <option value=130>Glavobol</option> 
+  						  <option value=140>Vročina</option> <option value=150>Gripa</option> <option value=160>Kašelj</option> <option value=170>Draženje</option> 
+  						  <option value=180>Nahod</option> <option value=190>Zobobol</option> <option value=200>Srbenje</option> <option value=210>Stres</option> 
+  						  <option value=220>Poškodba</option> <option value=230>Okužba</option> <option value=240>Prebava</option> <option value=250>Alergija</option> 
+  						  <option value=260>Zaprtje</option> <option value=270>Migrena</option> <option value=280>Artritis</option> <option value=290>Glivice</option> 
+  						  <option value=300>Kihanje</option> </select>
+  					    <button type="button" class="btn btn-primary btn-xs" onclick="dodajSimptom()">Dodaj simptome</button><span id="dodajSimptomSporocilo"></span>
   			  </div>
   			</div>
   		</div>

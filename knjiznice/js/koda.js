@@ -98,11 +98,6 @@ function generirajPodatke(stPacienta) {
   return ehrId;
 }
 
-/**
-+ * Kreiraj nov EHR zapis za pacienta in dodaj osnovne demografske podatke.
-+ * V primeru uspešne akcije izpiši sporočilo s pridobljenim EHR ID, sicer
-+ * izpiši napako.
-+ */
 function kreirajEHRzaBolnika() {
 	sessionId = getSessionId();
 
@@ -155,10 +150,12 @@ function kreirajEHRzaBolnika() {
 
 function dodajSimptom() {
 	sessionId = getSessionId();
-
+    
+    var e = document.getElementById("dodajSimptomSimptom");
+    var simptom = e.options[e.selectedIndex].value;
 	var ehrId = $("#dodajSimptomEHR").val();
 	var datumInUra = $("#dodajSimptomDatumInUra").val();
-    var simptom = $("dodajSimptom").val();
+    var merilec = 'uporabnik';
 
 	if (!ehrId || ehrId.trim().length == 0) {
 		$("#dodajSimptomSporocilo").html("<span class='obvestilo " +
@@ -169,14 +166,17 @@ function dodajSimptom() {
 		});
 		var podatki = {
 		    "ctx/language": "en",
+		    "ctx/territory": "SI",
             "ctx/time": datumInUra, 
-			"Symptom": { simpotom }          
+			"vital_signs/body_weight/any_event/body_weight": simptom
 		};
 		var parametriZahteve = {
 		    ehrId: ehrId,
-		    format: 'RAW'
+		    templateId: 'Vital Signs',
+		    format: 'FLAT',
+		    committer: merilec
 		};
-		$.ajax({
+	$.ajax({
 		    url: baseUrl + "/composition?" + $.param(parametriZahteve),
 		    type: 'POST',
 		    contentType: 'application/json',
@@ -199,7 +199,6 @@ function preberiSimptome() {
     sessionId = getSessionId();
 
 	var ehrId = $("#preberiSimptomeEHRid").val();
-//	var tip = $("#preberiTipZaVitalneZnake").val();
 
 	if (!ehrId || ehrId.trim().length == 0) {
 		$("#preberiSimptomeSporocilo").html("<span class='obvestilo " +
@@ -214,19 +213,102 @@ function preberiSimptome() {
 				$("#preberiSimptomeSporocilo").html("<br/><span>Pridobivanje " +
                     "simpotomov za bolnika <b>'" + party.firstNames +" " + party.lastNames + "'</b>.</span><br/><br/>");
     			$.ajax({
-      			    url: baseUrl + "/view/" + ehrId + "/" + "body_temperature",
+      			    url: baseUrl + "/view/" + ehrId + "/" + "weight",
     			    type: 'GET',
     			    headers: {"Ehr-Session": sessionId},
     			    success: function (res) {
     			        	if (res.length > 0) {
-    	    			    	var results = "<table class='table table-striped " +
-                             "<th class='text-left'>Telesna temperatura</th></tr>";
+    	    			    	var results = "<table class='table table-striped" +
+                             "<th class='table-hover'>Simptom</th></tr>";
     				        for (var i in res) 
     				        {
-    				            results += "<tr><td class='text-right'>" + res[i].symptom + "</td>";
+								var Symptom = res[i].weight;
+    				            switch(res[i].weight) {
+									case 100:
+										Symptom = 'Vnetje';
+										break;
+									case 110:
+										Symptom = 'Prehlad';
+										break;
+									case 120:
+										Symptom = 'Bolečina';
+										break;	
+									case 130:
+										Symptom = 'Glavobol';
+										break;
+									case 140:
+										Symptom = 'Vročina';
+										break;
+									case 150:
+										Symptom = 'Gripa';
+										break;
+									case 160:
+										Symptom = 'Kašelj';
+										break;
+									case 170:
+										Symptom = 'Draženje';
+										break;
+									case 180:	
+										Symptom = 'Nahod';
+										break;	
+									case 190:
+										Symptom = 'Zobobol';
+										break;
+									case 200:
+										Symptom = 'Srbenje';
+										break;
+									case 210:
+										Symptom = 'Stres';
+										break;
+									case 220:	
+										Symptom = 'Poškodba';
+										break;
+									case 230:
+										Symptom = 'Okužba';
+										break;
+									case 240:
+										Symptom = 'Prebava';
+										break;
+									case 250:
+										Symptom = 'Alergija';
+										break;
+									case 260:
+										Symptom = 'Zaprtje';
+										break;
+									case 270:
+										Symptom = 'Migrena';
+										break;
+									case 280:
+										Symptom = 'Artritis';
+										break;
+									case 290:
+										Symptom = 'Glivice';
+										break;
+									case 300:
+										Symptom = 'Kihanje';
+										break;
+									default:
+										break; 
+						} 
+    				            results += "<tr><td class='text-left'>" + Symptom + "</td>";
+//							    results += "<td class='text-right'><b>" + res[i].time + "</b></td>";
     				        }
     				        results += "</table>";
     				        $("#simpotomiDoZdaj").append(results);
+    				        
+    				        $('.text-left').click(function(){
+								console.log(this);
+								odpriLekarno(this);
+							});
+    				        var tabela = document.getElementById("tabeleSimptomov");
+    				        console.log(tabela);
+							   if (tabela != null) {
+							        for (var i = 0; i < tabela.rows.length; i++) {
+							            tabela.rows[i].cells[0].onclick = function () {
+							                odpriLekarno(this);
+							            };
+							        }
+							   }
     			    	} else {
     			    		$("#preberiSimptomeSporocilo").html(
                              "<span class='obvestilo label label-warning fade-in'>" +
@@ -247,3 +329,23 @@ function preberiSimptome() {
 		});
 	}
 }
+
+function odpriLekarno(tableCell) {
+	console.log("Delujem!");
+	var cilj = 'http://www.lekarnar.com/oddelki/zdravila-brez-recepta?simptom_facet=' + this;
+	var povezava='<iframe src="' +cilj +'"></iframe>';
+	$("#lekarnarPovezava").append(povezava);
+}
+
+//table row -> ima table, ki z on click prikaže dodatne simptome in zgenerira iframe
+/* 	<tr><td id="simpt"+ i onclick=ustvariPodtabelo()></td>
+*	
+*	
+*	
+
+//cilj= 'http://www.lekarnar.com/oddelki/zdravila-brez-recepta?simptom_facet=' +simptom;
+//povezava='<iframe src="' +cilj +'"></iframe>';
+//$("#lekarnarPovezava).append(povezava);
+
+*master/detail v obliki tabele, kjer lahko s klikom na vrstico odpremo podtabelo in zgeneriramo predlagana zdravila
+*/
